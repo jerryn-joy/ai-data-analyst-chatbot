@@ -1,0 +1,466 @@
+{
+  "name": "final best data analyst",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nMy name is Nova. I am your AI Data Assistant. How can I assist you today?",
+        "options": {
+          "allowFileUploads": false,
+          "inputPlaceholder": "What is the total revenue for September?",
+          "showWelcomeScreen": true,
+          "getStarted": "Start chatting now!",
+          "subtitle": "Get real-time answers about your sales. We are here to help you 24/7.",
+          "title": "AI Data Analyst - Nova Corp",
+          "customCss": ":root {\n  /* Brand colors */\n  --chat--color-primary: #417fb8;\n  --chat--color-primary-shade-50: #78a2c6;\n  --chat--color-primary-shade-100: #3a73a7;\n  --chat--color-secondary: #bad1e4;\n  --chat--color-white: #ffffff;\n  --chat--color-light: #f7fafb;\n  --chat--color-light-shade-50: #e9f1f6;\n  --chat--color-light-shade-100: #d8e2eb;\n  --chat--color-dark: #1f2933;\n\n  /* Header */\n  --chat--header--background: var(--chat--color-light);\n  --chat--header--padding: 1.2rem;\n  --chat--heading--font-size: 1.8rem;\n  --chat--subtitle--font-size: 1.05rem;\n\n  /* Messages */\n  --chat--message--user--background: var(--chat--color-primary);\n  --chat--message--user--color: #ffffff;\n  --chat--message--bot--background: var(--chat--color-light-shade-50);\n  --chat--message--bot--border: 1px solid var(--chat--color-light-shade-100);\n\n  /* Input & Send button */\n  --chat--input--border: 1px solid var(--chat--color-light-shade-100);\n  --chat--input--border-radius: 12px;\n  --chat--input--send--button--background: #417fb8;\n  --chat--input--send--button--color: #ffffff;\n  --chat--input--send--button--background-hover: #3a73a7;\n  --chat--input--send--button--color-hover: #ffffff;\n\n  /* Toggle */\n  --chat--toggle--background: linear-gradient(135deg, #417fb8, #78a2c6);\n  --chat--toggle--color: #ffffff;\n}\n\n/* CENTER the entire header */\n.chat-header {\n  text-align: center !important;\n  display: flex !important;\n  flex-direction: column !important;\n  align-items: center !important;\n  justify-content: center !important;\n}\n\n/* Title - blue, bold, centered */\n.chat-header h1,\n.chat-header .title,\n.chat-title {\n  text-align: center !important;\n  color: #417fb8 !important;\n  font-weight: 800 !important;\n  font-size: 1.8rem !important;\n  margin: 0 auto 0.4rem !important;\n  width: 100% !important;\n}\n\n/* Subtitle - BLACK, centered */\n.chat-header .subtitle,\n.chat-header p {\n  text-align: center !important;\n  color: #1f2933 !important;\n  font-size: 1.05rem !important;\n  font-weight: 500 !important;\n  margin: 0 auto !important;\n  width: 100% !important;\n}\n\n/* Send button - blue circle with white arrow */\nbutton[aria-label*=\"Send\"],\n.chat-input button[type=\"submit\"],\n.send-button {\n  background: #417fb8 !important;\n  color: #ffffff !important;\n  border-radius: 50% !important;\n  width: 40px !important;\n  height: 40px !important;\n  min-width: 40px !important;\n  padding: 0 !important;\n  display: flex !important;\n  align-items: center !important;\n  justify-content: center !important;\n  box-shadow: 0 4px 10px rgba(65,127,184,0.3);\n}\n\nbutton[aria-label*=\"Send\"]:hover,\n.send-button:hover {\n  background: #3a73a7 !important;\n  transform: translateY(-2px);\n}"
+        }
+      },
+      "id": "10466bbf-f695-442a-b3bd-b2791d6b0dcc",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        -336,
+        1504
+      ],
+      "webhookId": "e4a9a147-7a38-4027-b869-bdb13a89dc30",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1JZyd9QxJzk9voUd7kC7gQMONJOZzQ9CTWeLRc4zN9zE"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Products",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "1f6cb7a4-f69b-4d80-8cd4-5077b79e007a",
+      "name": "Google Sheets - Get Products Data",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -112,
+        1312
+      ],
+      "typeVersion": 4.5,
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "br6yHh3CjG2Cr0dE",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1JZyd9QxJzk9voUd7kC7gQMONJOZzQ9CTWeLRc4zN9zE"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Customers",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "d6c10be4-7110-47f2-9696-77e002c0444a",
+      "name": "Google Sheets - Get Customers Data",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -112,
+        1504
+      ],
+      "typeVersion": 4.5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "br6yHh3CjG2Cr0dE",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1JZyd9QxJzk9voUd7kC7gQMONJOZzQ9CTWeLRc4zN9zE"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Orders",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "05420db8-b464-40db-a400-7729a85b4542",
+      "name": "Google Sheets - Get Orders Data",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -112,
+        1696
+      ],
+      "typeVersion": 4.5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "br6yHh3CjG2Cr0dE",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "id": "9ffe658e-f5de-45aa-922d-1f1a13db1c0b",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        336,
+        1488
+      ],
+      "typeVersion": 3.1
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "products",
+        "options": {}
+      },
+      "id": "bf6a32a7-7cf4-4a4f-8b2e-e8a829f69c1f",
+      "name": "Aggregate Data 1",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        112,
+        1312
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "customers",
+        "options": {}
+      },
+      "id": "ed45029e-dcc7-4d5e-baab-19dd420a0f18",
+      "name": "Aggregate Data 2",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        112,
+        1504
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "orders",
+        "options": {}
+      },
+      "id": "6a5c6d3c-2c03-42b2-a182-1c49594b5ba8",
+      "name": "Aggregate Data 3",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        112,
+        1696
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=User Input:\n\n{{ $('When chat message received').item.json.chatInput }}\n\nOnly if my question is unclear, ask at most one concise clarifying question\nIf you can proceed with a reasonable assumption, do so and state the assumption in one short line.\nAvoid multi-step back-and-forth.",
+        "options": {
+          "systemMessage": "=You are a helpful, friendly but professional AI Data Analyst. You work for Nova Corp and help users get the information they want about Sales.\n\nUse ONLY the provided JSON data to analyze and answer questions.\n\nProducts:\n{{ $json.products.toJsonString() }}\n\nCustomers:\n{{ $json.customers.toJsonString() }}\n\nOrders:\n{{ $json.orders.toJsonString() }}\n\nAlways use the data above when performing analysis.  \n\nRules\n1) Never invent rows. If data is missing, say what you need.\n2) Time math: treat order_date_iso as calendar dates.\n3) Round currency to 2 decimals; percentages to 2 decimals with %.\n4) Do not mention tools, nodes, prompts, or that you were given JSON."
+        }
+      },
+      "id": "36eef2c6-a5cf-4e1e-ba1a-69d229d19a61",
+      "name": "Data Analyst AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1008,
+        1520
+      ],
+      "typeVersion": 1.9
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {
+          "maxTokensToSample": 4096,
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        1728
+      ],
+      "id": "3a4146ae-df35-4f02-b3bf-460a30f80ed4",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "7O1i12m6ZjTzBCsA",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1104,
+        1728
+      ],
+      "id": "e611112f-5cf9-42e5-9bfc-1f54f10bb66c",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * Validate & normalize Products, Customers, Orders from Merge node.\n * Friendly messages + robust detection for \"error arrays\" from Sheets nodes.\n *\n * Required headers:\n * Products:  \"Product ID\", \"Product Name\", \"Category\", \"Unit Price ($)\", \"Stock Quantity\"\n * Customers: \"Customer ID\", \"First Name\", \"Last Name\", \"Email\", \"City\"\n * Orders:    \"Order ID\", \"Customer ID\", \"Product ID\", \"Order Date\", \"Quantity\", \"Total Amount ($)\"\n */\n\nconst input = items[0]?.json || {};\n\n// ---------- helpers ----------\nconst num = (v) => {\n  if (v === null || v === undefined) return null;\n  const n = parseFloat(String(v).replace(/[^\\d.-]/g, ''));\n  return Number.isFinite(n) ? n : null;\n};\n\nconst toISOFromDDMMYYYY = (s) => {\n  if (!s) return null;\n  if (s instanceof Date && !isNaN(s)) return s.toISOString().slice(0, 10);\n  const m = String(s).match(/^(\\d{1,2})[\\/\\-](\\d{1,2})[\\/\\-](\\d{4})$/);\n  if (!m) {\n    const d = new Date(s);\n    return isNaN(d) ? null : d.toISOString().slice(0, 10);\n  }\n  const dd = String(m[1]).padStart(2, '0');\n  const mm = String(m[2]).padStart(2, '0');\n  const yyyy = m[3];\n  return `${yyyy}-${mm}-${dd}`;\n};\n\n// Treat arrays that only contain error rows as \"missing tab\"\nconst isErrorArray = (arr) => {\n  if (!Array.isArray(arr) || arr.length === 0) return false;\n  // common shapes: [{ error: \"...\" }], [{ message: \"...\", code: ... }], or a single string \"error\"\n  const first = arr[0];\n  if (typeof first === 'string') return true;\n  if (first && typeof first === 'object') {\n    const keys = Object.keys(first);\n    if (keys.length === 1 && (keys[0] === 'error' || keys[0] === 'message')) return true;\n    // sometimes error text is nested\n    if (('error' in first) || ('message' in first && String(first.message).toLowerCase().includes('not found'))) {\n      return true;\n    }\n  }\n  return false;\n};\n\n// ---------- requirements ----------\nconst REQUIRED = {\n  products: [\n    \"Product ID\",\n    \"Product Name\",\n    \"Category\",\n    \"Unit Price ($)\",\n    \"Stock Quantity\",\n  ],\n  customers: [\n    \"Customer ID\",\n    \"First Name\",\n    \"Last Name\",\n    \"Email\",\n    \"City\",\n  ],\n  orders: [\n    \"Order ID\",\n    \"Customer ID\",\n    \"Product ID\",\n    \"Order Date\",\n    \"Quantity\",\n    \"Total Amount ($)\",\n  ],\n};\n\nconst TAB_LABELS = { products: \"Products\", customers: \"Customers\", orders: \"Orders\" };\n\n// Pull current values\nconst productsIn  = input.products;\nconst customersIn = input.customers;\nconst ordersIn    = input.orders;\n\n// ---------- 1) Tabs present? (including \"error arrays\") ----------\nconst missingTabs = [];\nfor (const key of Object.keys(REQUIRED)) {\n  const val = input[key];\n  const absent = !Array.isArray(val);\n  const errorLike = isErrorArray(val);\n  if (absent || errorLike) {\n    missingTabs.push(key);\n  }\n}\n\nif (missingTabs.length) {\n  const names = missingTabs.map(k => `“${TAB_LABELS[k]}”`).join(\", \");\n  const plural = missingTabs.length > 1 ? \"tabs\" : \"tab\";\n  const message =\n    `I couldn’t find the ${plural} ${names} in your Google Sheet.\\n\\n` +\n    `Please check the tab name${missingTabs.length>1?'s':''} at the bottom of your sheet.\\n` +\n    `They should be named exactly: “Products”, “Customers”, and “Orders”.\\n\\n` +\n    `If you need help, contact the admin.`;\n\n  return [{\n    json: {\n      error: true,\n      message,\n      health: {\n        sheets_ok: false,\n        missing_tabs: missingTabs.map(k => TAB_LABELS[k]),\n        counts: {\n          products: Array.isArray(productsIn)  && !isErrorArray(productsIn)  ? productsIn.length  : 0,\n          customers: Array.isArray(customersIn) && !isErrorArray(customersIn) ? customersIn.length : 0,\n          orders: Array.isArray(ordersIn)    && !isErrorArray(ordersIn)    ? ordersIn.length    : 0,\n        }\n      }\n    }\n  }];\n}\n\n// ---------- 2) Empty tabs? (friendly message) ----------\nconst countsNow = {\n  products: (Array.isArray(productsIn)  ? productsIn.length  : 0),\n  customers:(Array.isArray(customersIn) ? customersIn.length : 0),\n  orders:   (Array.isArray(ordersIn)    ? ordersIn.length    : 0),\n};\n\nconst emptyTabs = [];\nif (countsNow.products === 0) emptyTabs.push(\"Products\");\nif (countsNow.customers === 0) emptyTabs.push(\"Customers\");\nif (countsNow.orders === 0) emptyTabs.push(\"Orders\");\n\nif (emptyTabs.length) {\n  const plural = emptyTabs.length > 1 ? \"tabs are\" : \"tab is\";\n  const message =\n    `Your sheet is connected, but the ${plural} empty: ${emptyTabs.join(\", \")}.\\n\\n` +\n    `Please add at least one data row under the header (row 1) in each listed tab, then try again.\\n` +\n    `If you need help, contact the admin.`;\n\n  return [{\n    json: {\n      error: true,\n      message,\n      health: { sheets_ok: true, missing_tabs: [], counts: countsNow }\n    }\n  }];\n}\n\n// ---------- 3) Headers correct? (check only if there are rows & not error-like) ----------\nconst headerIssues = [];\nfor (const [key, requiredCols] of Object.entries(REQUIRED)) {\n  const rows = input[key] || [];\n  if (!rows.length || isErrorArray(rows)) continue; // skip; already handled above\n  const found = Object.keys(rows[0] || {});\n  const missing = requiredCols.filter(c => !found.includes(c));\n  if (missing.length) {\n    headerIssues.push({ tabName: TAB_LABELS[key], missing, found });\n  }\n}\n\nif (headerIssues.length) {\n  const lines = headerIssues.map(h =>\n    `• In the “${h.tabName}” tab, I couldn’t find: ${h.missing.join(\", \")}.\\n` +\n    `  Please rename your header row to match exactly.\\n` +\n    `  Currently I see: ${h.found.join(\", \")}`\n  ).join(\"\\n\\n\");\n\n  const message =\n    `Some column headers don’t match the expected template.\\n\\n${lines}\\n\\n` +\n    `Tip: Header names must match exactly (including spaces and symbols like “($)”).\\n` +\n    `If you need help, contact the admin.`;\n\n  return [{\n    json: {\n      error: true,\n      message,\n      health: { sheets_ok: true, missing_tabs: [], counts: countsNow }\n    }\n  }];\n}\n\n// ---------- 4) Normalize Products ----------\nconst productsRaw = input.products || [];\nconst products = productsRaw.map(r => ({\n  product_id: r[\"Product ID\"] ?? null,\n  product_name: r[\"Product Name\"] ?? null,\n  category: r[\"Category\"] ?? null,\n  unit_price: num(r[\"Unit Price ($)\"]),\n  stock_quantity: num(r[\"Stock Quantity\"]),\n}));\n\n// Price lookup for fallback totals\nconst priceByProductId = new Map(\n  products.filter(p => p.product_id && p.unit_price !== null)\n          .map(p => [String(p.product_id), p.unit_price])\n);\n\n// ---------- 5) Normalize Customers ----------\nconst customersRaw = input.customers || [];\nconst customers = customersRaw.map(r => ({\n  customer_id: r[\"Customer ID\"] ?? null,\n  first_name: r[\"First Name\"] ?? null,\n  last_name: r[\"Last Name\"] ?? null,\n  email: r[\"Email\"] ?? null,\n  city: r[\"City\"] ?? null,\n}));\n\n// ---------- 6) Normalize Orders ----------\nconst ordersRaw = input.orders || [];\nconst orders = ordersRaw.map(r => {\n  const quantity = num(r[\"Quantity\"]);\n  let total_amount = num(r[\"Total Amount ($)\"]);\n\n  if (total_amount === null) {\n    const pid = r[\"Product ID\"] ? String(r[\"Product ID\"]) : null;\n    const unitPrice = pid ? priceByProductId.get(pid) : null;\n    if (quantity !== null && unitPrice !== null) {\n      total_amount = Number((quantity * unitPrice).toFixed(2));\n    }\n  }\n\n  return {\n    order_id: r[\"Order ID\"] ?? null,\n    customer_id: r[\"Customer ID\"] ?? null,\n    product_id: r[\"Product ID\"] ?? null,\n    order_date_raw: r[\"Order Date\"] ?? null,\n    order_date_iso: toISOFromDDMMYYYY(r[\"Order Date\"]),\n    quantity,\n    total_amount,\n  };\n});\n\n// ---------- 7) Health + return ----------\nconst health = {\n  sheets_ok: true,\n  missing_tabs: [],\n  counts: {\n    products: products.length,\n    customers: customers.length,\n    orders: orders.length,\n  }\n};\n\nreturn [{ json: { error: false, message: null, health, products, customers, orders } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        1504
+      ],
+      "id": "ea662bb1-04db-4e7b-8a8a-7fd9dbd080a7",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a9fb4a3e-f104-4afc-b44d-3fa14cd925f5",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "faac5dff-b605-405d-8e9a-6e22a48db8ad",
+              "leftValue": "={{ !Array.isArray($json.products) || $json.products.length === 0 }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "c464811f-abf7-41fb-9d0e-1e6dd4f453a3",
+              "leftValue": "={{ !Array.isArray($json.customers) || $json.customers.length === 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "1446690d-6d46-436d-b813-0bf41c9d1f6d",
+              "leftValue": "={{ !Array.isArray($json.orders) || $json.orders.length === 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        784,
+        1504
+      ],
+      "id": "2362dd67-8204-4734-ab4f-476f26f0722d",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets - Get Products Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Sheets - Get Customers Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Sheets - Get Orders Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Data 1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Data 2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Aggregate Data 3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Google Sheets - Get Products Data": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Data 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets - Get Customers Data": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Data 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets - Get Orders Data": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Data 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Data Analyst AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Data Analyst AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Data Analyst AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5139ef87-6105-4df1-b938-d0ece66c03f7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "119e850aa9ed219428f52a98be4fac6cdd03505191206458f0f800847d44e2c4"
+  },
+  "id": "g13tcAZFFEVjfBX1",
+  "tags": []
+}
