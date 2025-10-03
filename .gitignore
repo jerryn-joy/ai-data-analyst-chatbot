@@ -1,0 +1,7 @@
+# secrets & local state
+.env
+.n8n/
+*.log
+node_modules/
+credentials.json
+.DS_Store
