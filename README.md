@@ -1,70 +1,92 @@
-# 🤖 AI Data Analyst Chatbot (Nova)
+# 🤖 Nova — AI Data Analyst Chatbot (n8n + Groq + Google Sheets)
 
-A local n8n-powered chatbot that answers sales questions from your Google Sheets. Works entirely on your machine.
+A local, privacy-friendly chatbot that answers **sales questions** from your **Google Sheet** using **n8n** workflows, **Groq** LLMs, and a clean, branded chat UI. It validates/normalizes data, returns transparent calculations, and can render charts via **QuickChart**.
 
-![Chatbot Demo](assets/chat-interface.png)
+> The core idea: show how free tools and open models can analyze your own data locally. The demo uses sales data (a common use case), but you can adapt it to any dataset.
+
+<p align="center">
+  <img src="./assets/demo.gif" alt="Chatbot Demo">
+</p>
+
+<p align="center">
+  <a href="./assets/demo.mp4">🎥 Watch Full Demo</a>
+</p>
 
 ## ✨ What it does
-- Natural-language questions about **Products**, **Customers**, **Orders**
-- Validates your Google Sheet and gives friendly error messages
-- Uses Groq LLM (gpt-oss-120b) with short-term memory
-- Clean, branded chat UI
+
+- 🧠 Natural-language Q&A over **Products**, **Customers**, and **Orders**
+- 🧼 Defensive data layer: header checks, missing/empty tab detection, day-first date parsing, numeric coercion
+- 🧾 Transparent analytics: lists **order IDs**, shows subtotals/totals, formats currency (%) with two decimals
+- 🧮 Programmatic math only: uses a calculator/tool (no hand-added sums)
+- 🧰 Composable: agent can call a **chart sub-workflow** that returns a rendered image URL
+- 🧷 Short-term memory: remembers the last few turns
+- 🎨 Clean, branded chat UI (custom CSS)
+- 🔒 Local-first: runs on your machine; you own the data
+
+### Workflows
+
+- **Main AI Agent:** `AI Data Analyst Chatbot`
+- **Sub-workflow:** `Generate Chart` (invoked when the user requests a chart/graph)
 
 ## 🧱 Architecture
-User → **n8n Chat Trigger** → Google Sheets (3 tabs) → **Code validation/normalization** → **AI Agent** → Chat response
 
-![Architecture](assets/architecture-diagram.png)
+![Architecture](./assets/architecture.png)
 
-## ✅ Prereqs
-- n8n running **locally** at `http://localhost:5678`
-- Google account with **Sheets API** enabled
-- Groq API key
-- A Google Sheet with 3 tabs (exact names): `Products`, `Customers`, `Orders`
+## 💬 Usage
 
-### Required headers
-**Products:** `Product ID | Product Name | Category | Unit Price ($) | Stock Quantity`  
-**Customers:** `Customer ID | First Name | Last Name | Email | City`  
-**Orders:** `Order ID | Customer ID | Product ID | Order Date | Quantity | Total Amount ($)`  
-**Dates:** Use `DD/MM/YYYY` (e.g., `15/09/2024`)
+Ask:
 
-A template is in `data/sample-google-sheet-template.xlsx`.
+- "Total revenue for September?"
+- "Top 5 customers by spend"
+- "Products low on stock (< 10)"
+- "Revenue by category last 3 months"
+- "Monthly revenue for Jan–Jun and the trend (chart)?"
+- "Which category brings in the most money?"
+- "Who are our top 3 customers and which cities buy the most?"
 
-## 🚀 Run locally (no public hosting)
-1. **Start n8n** (local): open `http://localhost:5678`
-2. **Import the workflow**  
-   - n8n → *Import from File* → select `workflows/ai-data-analyst-v1.json`
-3. **Set credentials**
-   - Open each **Google Sheets** node → create **Google Sheets OAuth2** credential → connect your account
-   - Open **Groq Chat Model** node → add **Groq API** credential with your key
-4. **Point to your Sheet**
-   - In all 3 Sheets nodes, set the `documentId` to your **Google Sheet ID** (from its URL)
-5. **Activate the workflow** (toggle “Active”)
-6. **Open the chat**
-   - Open the **Chat Trigger** node and copy the **Chat URL** it shows (on local it usually looks like  
-     `http://localhost:5678/webhook/<id>/chat`)  
-   - Paste that URL below so anyone on your machine can click and chat:
+The bot will:
 
-**Chat now:** 👉 [Open Nova locally](YOUR_CHAT_URL)
+- Validate your sheet structure
+- Compute metrics programmatically
+- List **order IDs** per month/segment
+- Generate **one chart** when asked or when it clearly finalizes the answer
 
-> Notes:
-> - The Chat URL is visible inside the Chat Trigger node UI.  
-> - Each user message triggers the workflow anew; connect a memory node if you want session recall. :contentReference[oaicite:0]{index=0}
+A ready-made Excel template is included at `data/sample-sales-data-template.xlsx` or [Google Sheet link](#)
 
-## 🧪 Sample questions
-- “Total revenue for September?”
-- “Top 5 customers by spend”
-- “Products low on stock (< 10)”
-- “Revenue by category last 3 months”
+> For detailed setup, internals, and troubleshooting, see **[docs/DETAILED_README.md](docs/DETAILED_README.md)**.
 
-## 🛠 Troubleshooting (local)
-- **Chat shows but doesn’t reply** → Ensure workflow is *Active* and your credentials are valid.  
-- **Validation errors** → Check exact tab names and headers (must match, including `($)` symbols).  
-- **Date parsing off** → Use `DD/MM/YYYY`, not formulas.  
-- **Chat URL** → Copy it from the Chat Trigger node; local pattern is `/webhook/<id>/chat`. :contentReference[oaicite:1]{index=1}
+---
 
-## 🔐 Security (local)
-- Don’t commit credentials or API keys.
-- Keep `.n8n/` and `.env` in `.gitignore`.
+## 🗂️ Repo Structure
+```text
+├─ workflows/
+│  ├─ ai-data-analyst-chatbot.json    # Main n8n workflow (Chat, Sheets, Validate, Agent, Tools)
+│  └─ generate-chart.json             # Sub-workflow (Chart.js v2 config → QuickChart)
+├─ data/
+│  └─ sample-sales-data-template.xlsx # Sheet template with required tabs/headers
+├─ assets/
+│  ├─ demo.mp4                        # Short demo video
+│  ├─ demo.gif                        # Demo preview (for README)
+│  ├─ architecture.png                # System architecture diagram
+│  └─ chat-ui-screenshot.png          # Screenshot of the chat UI
+├─ docs/
+│  ├─ SETUP.md                        # Installation and setup guide
+│  ├─ DETAILED_README.md              # In-depth developer documentation
+│  └─ TROUBLESHOOTING.md              # Common issues and solutions
+├─ .gitignore
+├─ LICENSE
+└─ README.md
+```
 
-## 📜 License
-MIT — see `LICENSE`.
+## 🛣️ Improvements in Progress
+
+- Ingest once; **store in DB** (SQL or vector DB) and update on change (better for large datasets)
+- Extend **memory** beyond short-term
+- Additional connectors and source types
+
+## 🧩 Why this project
+
+- **Workflow design:** clean node graph with clear separation of concerns
+- **Robustness:** strong pre-checks, exact header enforcement, helpful errors
+- **Prompt design:** rules that enforce programmatic math, transparency, and chart discipline
+- **Dev ergonomics:** clear setup, sample data, and branding hooks
