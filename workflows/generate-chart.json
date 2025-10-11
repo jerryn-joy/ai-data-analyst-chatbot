@@ -1,0 +1,247 @@
+{
+  "name": "Generate Chart",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {
+          "maxTokensToSample": 1000,
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        416,
+        48
+      ],
+      "id": "78b521a6-7015-4008-8592-41424a1efe7f",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "7O1i12m6ZjTzBCsA",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Generate ONLY a valid Chart.js (v2) JSON configuration. Output a single JSON object — no explanations, no markdown, no code fences, no comments.\n\nHard requirements:\n- Top-level keys: \"type\", \"data\", \"options\".\n- \"data\" MUST include:\n  - \"labels\": array of strings.\n  - \"datasets\": array with at least 1 object, each with:\n    - \"label\": string\n    - \"data\": array of numbers (same length and order as \"labels\" for single-series charts)\n- Use Chart.js v2 axes syntax:\n  - For bar/line charts: set options.scales.yAxes[0].ticks.beginAtZero = true\n- Use different colors ONLY when there are multiple datasets. For a single dataset, use:\n  - \"backgroundColor\": \"rgba(65,127,184,0.8)\"\n  - \"borderColor\": \"rgba(65,127,184,1)\"\n  - \"borderWidth\": 1\n- If a title is provided, include:\n  - options.plugins.title = { \"display\": true, \"text\": \"<title>\" }\n- Validate before output:\n  - labels.length === data.length for each dataset using category data\n  - All \"data\" values are finite numbers (no NaN/Infinity/strings); coerce where safe or drop invalid points to keep array lengths equal\n  - No trailing commas; strictly valid JSON\n\nConstraints:\n- Do not invent categories or numbers; only use provided inputs.\n- Preserve the order of labels and their corresponding data.\n- Keep numbers unformatted (no thousands separators).\n- Return compact JSON (minified or lightly spaced is fine) as a single object.\n\nExample structure (for shape only; values must come from the provided inputs):\n{\"type\":\"bar\",\"data\":{\"labels\":[\"A\",\"B\"],\"datasets\":[{\"label\":\"Series\",\"data\":[10,20],\"backgroundColor\":\"rgba(65,127,184,0.8)\",\"borderColor\":\"rgba(65,127,184,1)\",\"borderWidth\":1}]},\"options\":{\"scales\":{\"yAxes\":[{\"ticks\":{\"beginAtZero\":true}}]},\"plugins\":{\"title\":{\"display\":true,\"text\":\"Example Title\"}}}}"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        416,
+        -160
+      ],
+      "id": "0c912672-ff22-4849-85f7-6ecc9aaca20e",
+      "name": "Build Chart.js v2 Config"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "chatInput",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        192,
+        -160
+      ],
+      "id": "e5d3022d-39aa-4b4f-b246-0e4792971a70",
+      "name": "Triggered by Main Workflow (Receives Chart Request)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inputData = $input.all();\nconst response = inputData[0].json.output || inputData[0].json.text || inputData[0].json;\n\nlet content = typeof response === 'string' ? response : JSON.stringify(response);\n\ntry {\n  // Parse to validate and fix\n  const parsed = JSON.parse(content);\n  \n  // Re-stringify to ensure clean JSON\n  content = JSON.stringify(parsed);\n  \n} catch (error) {\n  // If invalid, return fallback\n  content = JSON.stringify({\n    type: \"bar\",\n    data: {\n      labels: [\"Error\"],\n      datasets: [{\n        label: \"Invalid JSON\",\n        data: [1],\n        backgroundColor: \"rgba(255,99,71,0.5)\"\n      }]\n    },\n    options: {\n      scales: {\n        yAxes: [{\n          ticks: { beginAtZero: true }\n        }]\n      }\n    }\n  });\n}\n\nreturn [{\n  json: {\n    choices: [{\n      message: {\n        content: content\n      }\n    }]\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        784,
+        -160
+      ],
+      "id": "3a212011-563a-430c-88e4-62efd4851fd4",
+      "name": "Validate & Clean JSON Output"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "37512e1a-8376-4ba0-bdcd-34bb9329ae4b",
+              "name": "image_url",
+              "type": "string",
+              "value": "={{ \n  \"https://quickchart.io/chart?width=600&c=\" + \n  encodeURIComponent(\n    JSON.stringify(\n      JSON.parse(\n        String($json.choices[0].message.content)\n          .trim()\n          .replace(/^```(?:json)?\\s*/i, '')\n          .replace(/```$/,'')\n          .replace(/;\\s*$/,'')\n      )\n    )\n  ) \n}}\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3a51f6a4-8ad3-4e56-a000-8948a18c34c8",
+      "name": "Build QuickChart Image URL",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1024,
+        -160
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "content": "### Entry point - receives chart query from main workflow",
+        "height": 80,
+        "width": 208,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        144,
+        224
+      ],
+      "typeVersion": 1,
+      "id": "c67f5dbb-75f6-4062-aea1-1a3f42c8b95f",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "### LLM generates Chart.js v2 JSON configuration based on the query",
+        "height": 80,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        416,
+        224
+      ],
+      "typeVersion": 1,
+      "id": "406ca678-00fb-4c35-bb06-cf876169f472",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### Validates JSON output, ensures valid structure, provides fallback on error",
+        "height": 96,
+        "width": 208,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        736,
+        208
+      ],
+      "typeVersion": 1,
+      "id": "6a04a064-f8fd-4c7b-a2da-88fb57f91052",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "### Encodes Chart.js config and builds QuickChart.io image URL",
+        "height": 96,
+        "width": 208,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        992,
+        208
+      ],
+      "typeVersion": 1,
+      "id": "2054baba-c19c-46a6-800f-a8303af312de",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Chart Generation Workflow",
+        "height": 80,
+        "width": 336
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        544,
+        -368
+      ],
+      "typeVersion": 1,
+      "id": "e62771f8-07d6-4b04-ab16-88d3ea1a5746",
+      "name": "Sticky Note5"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Build Chart.js v2 Config",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Chart.js v2 Config": {
+      "main": [
+        [
+          {
+            "node": "Validate & Clean JSON Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Triggered by Main Workflow (Receives Chart Request)": {
+      "main": [
+        [
+          {
+            "node": "Build Chart.js v2 Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Clean JSON Output": {
+      "main": [
+        [
+          {
+            "node": "Build QuickChart Image URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build QuickChart Image URL": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4031981f-0b6c-473f-abc3-5d854fd7bf92",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "119e850aa9ed219428f52a98be4fac6cdd03505191206458f0f800847d44e2c4"
+  },
+  "id": "M05QQuPIOVevoWFk",
+  "tags": []
+}
