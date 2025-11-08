@@ -8,10 +8,6 @@ A local, privacy-friendly chatbot that answers **sales questions** from your **G
   <img src="./assets/demo.gif" alt="Chatbot Demo">
 </p>
 
-<p align="center">
- <a href="./assets/demo.mp4" target="_blank" rel="noopener noreferrer">🎥 Watch Full Demo</a>
-</p>
-
 ## ✨ What it does
 
 - 🧠 Natural-language Q&A over **Products**, **Customers**, and **Orders**
