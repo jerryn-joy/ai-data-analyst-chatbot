@@ -9,7 +9,7 @@ A local, privacy-friendly chatbot that answers **sales questions** from your **G
 </p>
 
 <p align="center">
-  <a href="./assets/demo.mp4">🎥 Watch Full Demo</a>
+ <a href="./assets/demo.mp4" target="_blank" rel="noopener noreferrer">🎥 Watch Full Demo</a>
 </p>
 
 ## ✨ What it does
